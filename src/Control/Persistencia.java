@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +34,11 @@ public class Persistencia {
         this.ventas = ventas;
     }
 
+    public Persistencia(List<Comidas> comidas, int num) {
+        this.comidas = comidas;
+    }
+    
+
     public List<Local> leerLocales(){
         try(BufferedReader br = new BufferedReader(new FileReader("Save\\locales.txt"))){
             List <Local> l = new LinkedList<>();
@@ -40,6 +46,7 @@ public class Persistencia {
             while(linea != null){
                 String[] x = linea.split(":");
                 l.add(new Local(Integer.parseInt(x[0]), x[1], x[2], x[3]));
+                linea = br.readLine();
             }
             return l;
         }
@@ -97,22 +104,23 @@ public class Persistencia {
     protected List<Venta> leerVentas(){
         try(BufferedReader br = new BufferedReader(new FileReader("Save\\ventas.txt"));)
         {
-            List<Venta> ventas = new LinkedList();
+            List<Venta> l = new LinkedList();
             String linea=br.readLine();
             while(linea!=null){
                 String[] x = linea.split(":");
-                ventas.add(new Venta(Integer.parseInt(x[0]), Integer.parseInt(x[1]), Double.parseDouble(x[2])));
+                l.add(new Venta(Integer.parseInt(x[0]), Integer.parseInt(x[1]), Double.parseDouble(x[2])));
                 linea=br.readLine();
             }
-            return ventas;
+            return l;
         }
-        catch(Exception e){
+        catch(IOException e){
             System.out.println("error 2");
             return null;
         }
+        
     }
     
-    protected boolean guardarVenta(){
+    public boolean guardarVenta(){
         try(BufferedWriter bw=new BufferedWriter(new FileWriter("Save\\ventas.txt"));){
             for(Venta v:ventas){
                 bw.write(v.getLocal()+":"+v.getCantidad()+":"+v.getTotal());

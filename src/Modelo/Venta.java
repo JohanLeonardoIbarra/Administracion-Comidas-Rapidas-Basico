@@ -19,9 +19,13 @@ public class Venta {
     private double total;
 
     public Venta() {
+        comidas = new LinkedList<>();
     }
     
-    
+    public void updateValores(){
+        cantidad = cantidadProductosVendidos();
+        total = totalVenta();
+    }
 
     public Venta(int local, int cantidad, double total) {
         this.local = local;
@@ -29,9 +33,10 @@ public class Venta {
         this.total = total;
     }
     
-    
-    
     public double totalVenta(){
+        if(comidas.isEmpty()){
+            return 0;
+        }
         double total = 0;
         for (Comidas comida: comidas){
             total+= comida.getPrecio();
@@ -89,7 +94,7 @@ public class Venta {
 
     @Override
     public String toString() {
-        return "Venta{" + "local=" + local + ", comidas=" + comidas + ", cantidad=" + cantidad + ", total=" + total + '}';
+        return "Venta{ " + "Local #" + local + ", Cantidad= " + cantidad + ", Total= " + total + " }";
     }
     
     

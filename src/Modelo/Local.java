@@ -24,6 +24,17 @@ public class Local {
         this.direccion = direccion;
         this.telefono = telefono;
     }
+    
+    public int getCodigoLocal(String name){
+        return(this.getNombre().equals(name))?this.getCod():0;
+    }
+    
+    public Local buscarLocal(String nombre){
+        if(this.getNombre().equals(nombre)){
+            return this;
+        }
+        return null;
+    }
 
     public int getCod() {
         return cod;

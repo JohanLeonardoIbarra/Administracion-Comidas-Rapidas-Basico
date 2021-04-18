@@ -36,7 +36,8 @@ public class VentaDeComidasR {
    
     public static void main(String[] args) {
         VentaDeComidasR v = new VentaDeComidasR();
-        Gui g = new Gui(v.comidas, v.locales, v.ventas);
+        Controller control = new Controller(v.comidas, v.locales, v.ventas);
+        Gui g = new Gui(control);
         g.setVisible(true);
     }
 

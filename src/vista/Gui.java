@@ -5,8 +5,12 @@
  */
 package vista;
 
+import Control.Controller;
 import Control.Persistencia;
 import Modelo.Comidas;
+import Modelo.Local;
+import Modelo.Venta;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -18,18 +22,80 @@ public class Gui extends javax.swing.JFrame {
     /**
      * Creates new form Gui
      */
+    private Controller control;
+
     public Gui() {
         initComponents();
     }
 
-    public String[] comboBoxComida(){
-        List<Comidas> comidas = new Persistencia().leerComidas();
+    public Gui(Controller control) {
+        this.control = control;
+        initComponents();
+    }
+
+    private void limpiarAreasLocal() {
+        areaLocalCod.setText("");
+        areaLocalName.setText("");
+        areaLocalDir.setText("");
+        areaLocalTel.setText("");
+    }
+
+    private void limpiarAreasComida() {
+        areaComidaName.setText("");
+        areaComidaPrecio.setText("");
+    }
+
+    /*
+        Actualiza los valores en los comboBox de seleccion de comida y locales
+     */
+    private void updateUi() {
+        selectorComidaVenta.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxComida(control.getComidas())));
+        selectorLocalVenta.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxLocal(control.getLocales())));
+        selectorLocalEdit.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxLocal(control.getLocales())));
+        selectorComida.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxComida(control.getComidas())));
+    }
+
+    private void updateLista() {
+        listaCarroVentas.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return control.carroLista().length;
+            }
+
+            public String getElementAt(int i) {
+                return control.carroLista()[i];
+            }
+        });
+    }
+
+    private void updateListaHistorial(String local) {
+        listaVentas.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return control.ventasLista(local).length;
+            }
+
+            public String getElementAt(int i) {
+                return control.ventasLista(local)[i];
+            }
+        });
+
+    }
+
+    public String[] comboBoxComida(List<Comidas> comidas) {
         String a = "";
-        for(Comidas s:comidas){       
-            a += s.getNombre()+":";
-        } 
+        for (Comidas s : comidas) {
+            a += s.getNombre() + ":";
+        }
         return a.substring(0, a.length()).split(":");
     }
+
+    public String[] comboBoxLocal(List<Local> locales) {
+        String a = "";
+        for (Local s : locales) {
+            a += s.getNombre() + ":";
+        }
+        return a.substring(0, a.length()).split(":");
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,12 +105,42 @@ public class Gui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
+        selectorLocalVenta = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listaCarroVentas = new javax.swing.JList<>();
+        selectorComidaVenta = new javax.swing.JComboBox<>();
+        addCarro = new javax.swing.JButton();
+        delCarro = new javax.swing.JButton();
+        Total = new javax.swing.JLabel();
+        btnVender = new javax.swing.JButton();
+        limpiarCaja = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        selectorLocalHistorial = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listaVentas = new javax.swing.JList<>();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        selectorLocalEdit = new javax.swing.JComboBox<>();
+        btnBusquedaLocal = new javax.swing.JButton();
+        areaLocalCod = new javax.swing.JTextField();
+        areaLocalName = new javax.swing.JTextField();
+        areaLocalDir = new javax.swing.JTextField();
+        areaLocalTel = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        addLocal = new javax.swing.JButton();
+        delLocal = new javax.swing.JButton();
+        limpiarAreaLocales = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         areaComidaName = new javax.swing.JTextField();
@@ -52,50 +148,298 @@ public class Gui extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         selectorComida = new javax.swing.JComboBox<>();
+        btnBusquedaComida = new javax.swing.JButton();
+        addComida = new javax.swing.JButton();
+        delComida = new javax.swing.JButton();
+        limpiarAreaComidas = new javax.swing.JButton();
+
+        jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        selectorLocalVenta.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxLocal(control.getLocales())));
+
+        jLabel9.setText("Local");
+
+        listaCarroVentas.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return control.carroLista().length;
+            }
+            public String getElementAt(int i) {
+                return control.carroLista()[i];
+            }
+        });
+        jScrollPane1.setViewportView(listaCarroVentas);
+
+        selectorComidaVenta.setModel(new javax.swing.DefaultComboBoxModel<>(control.comboBoxComidaPrecio()));
+
+        addCarro.setText("Añadir Al Carro");
+        addCarro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addCarroActionPerformed(evt);
+            }
+        });
+
+        delCarro.setText("Sacar Del Carro");
+        delCarro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delCarroActionPerformed(evt);
+            }
+        });
+
+        Total.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Total.setText("Total");
+        Total.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        btnVender.setText("Vender");
+        btnVender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVenderActionPerformed(evt);
+            }
+        });
+
+        limpiarCaja.setText("Limpiar");
+        limpiarCaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                limpiarCajaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(addCarro)
+                                .addGap(33, 33, 33)
+                                .addComponent(delCarro))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addComponent(selectorComidaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(Total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnVender)
+                                .addGap(18, 18, 18)
+                                .addComponent(limpiarCaja))))
+                    .addComponent(selectorLocalVenta, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 273, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel9)
+                .addGap(4, 4, 4)
+                .addComponent(selectorLocalVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(139, 139, 139)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Total)
+                            .addComponent(selectorComidaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(delCarro)
+                    .addComponent(addCarro)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(limpiarCaja)
+                        .addComponent(btnVender)))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Registrar Venta", jPanel1);
+
+        selectorLocalHistorial.setModel(new javax.swing.DefaultComboBoxModel<>(control.comboBoxLocalHistorial()));
+
+        listaVentas.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(listaVentas);
+
+        jButton2.setText("Q");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Borrar Registro");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Borrar Todo");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(selectorLocalHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                        .addComponent(jButton2))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 273, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(selectorLocalHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
+                .addContainerGap())
         );
 
-        jTabbedPane1.addTab("tab3", jPanel3);
+        jTabbedPane1.addTab("Historial", jPanel3);
 
         jLabel1.setText("Registrar Local");
+
+        selectorLocalEdit.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxLocal(control.getLocales())));
+
+        btnBusquedaLocal.setText("Q");
+        btnBusquedaLocal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBusquedaLocalActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Cod");
+
+        jLabel6.setText("Nombre");
+
+        jLabel7.setText("Direccion");
+
+        jLabel8.setText("Telefono");
+
+        addLocal.setText("Crear");
+        addLocal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addLocalActionPerformed(evt);
+            }
+        });
+
+        delLocal.setText("Borrar");
+        delLocal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delLocalActionPerformed(evt);
+            }
+        });
+
+        limpiarAreaLocales.setText("Limpiar");
+        limpiarAreaLocales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                limpiarAreaLocalesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jLabel1)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(areaLocalCod, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(areaLocalName, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel6))
+                            .addComponent(limpiarAreaLocales))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(areaLocalDir, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(areaLocalTel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(54, 54, 54)))))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(selectorLocalEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBusquedaLocal)
+                        .addGap(9, 9, 9))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(addLocal)
+                        .addGap(18, 18, 18)
+                        .addComponent(delLocal)
+                        .addGap(16, 16, 16))))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addGap(0, 116, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(selectorLocalEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBusquedaLocal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8))
+                .addGap(3, 3, 3)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(areaLocalCod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(areaLocalName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(areaLocalDir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(areaLocalTel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addLocal)
+                    .addComponent(delLocal)
+                    .addComponent(limpiarAreaLocales))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel2.setText("Registrar Comida");
@@ -104,7 +448,40 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel4.setText("Precio");
 
-        selectorComida.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxComida()));
+        selectorComida.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxComida(control.getComidas())));
+        selectorComida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectorComidaActionPerformed(evt);
+            }
+        });
+
+        btnBusquedaComida.setText("Q");
+        btnBusquedaComida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBusquedaComidaActionPerformed(evt);
+            }
+        });
+
+        addComida.setText("Crear");
+        addComida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addComidaActionPerformed(evt);
+            }
+        });
+
+        delComida.setText("Borrar");
+        delComida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delComidaActionPerformed(evt);
+            }
+        });
+
+        limpiarAreaComidas.setText("Limpiar");
+        limpiarAreaComidas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                limpiarAreaComidasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -116,36 +493,60 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(areaComidaName)
                             .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
                                 .addComponent(jLabel3)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(18, 18, 18)
+                                .addGap(18, 304, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(limpiarAreaComidas)
+                                    .addComponent(areaComidaName, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)))
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(areaComidaPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addContainerGap(190, Short.MAX_VALUE)
-                        .addComponent(selectorComida, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(selectorComida, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBusquedaComida)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(addComida)
+                .addGap(18, 18, 18)
+                .addComponent(delComida)
+                .addGap(15, 15, 15))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(selectorComida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(areaComidaPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(areaComidaName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 46, Short.MAX_VALUE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(selectorComida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnBusquedaComida))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(areaComidaPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(areaComidaName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(addComida)
+                            .addComponent(delComida))
+                        .addGap(0, 7, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(limpiarAreaComidas)
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -178,6 +579,97 @@ public class Gui extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void selectorComidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectorComidaActionPerformed
+
+    }//GEN-LAST:event_selectorComidaActionPerformed
+
+    private void btnBusquedaComidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBusquedaComidaActionPerformed
+        Comidas c = control.buscarComidaYPrecio(selectorComida.getSelectedItem().toString());
+        areaComidaName.setText(c.getNombre());
+        areaComidaPrecio.setText(c.getPrecio() + "");
+    }//GEN-LAST:event_btnBusquedaComidaActionPerformed
+
+    private void addComidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addComidaActionPerformed
+        control.AgregarComida(areaComidaName.getText().toString(), areaComidaPrecio.getText().toString());
+        this.updateUi();
+        limpiarAreasComida();
+    }//GEN-LAST:event_addComidaActionPerformed
+
+    private void delComidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delComidaActionPerformed
+        control.borrarComida(areaComidaName.getText());
+        this.updateUi();
+        limpiarAreasComida();
+    }//GEN-LAST:event_delComidaActionPerformed
+
+    private void btnBusquedaLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBusquedaLocalActionPerformed
+        Local loc = control.buscarLocal(selectorLocalEdit.getSelectedItem().toString());
+        areaLocalCod.setText(loc.getCod() + "");
+        areaLocalName.setText(loc.getNombre());
+        areaLocalDir.setText(loc.getDireccion());
+        areaLocalTel.setText(loc.getTelefono());
+    }//GEN-LAST:event_btnBusquedaLocalActionPerformed
+
+    private void addLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLocalActionPerformed
+        control.agregarLocal(areaLocalCod.getText(), areaLocalName.getText(), areaLocalDir.getText(), areaLocalTel.getText());
+        this.updateUi();
+        limpiarAreasLocal();
+    }//GEN-LAST:event_addLocalActionPerformed
+
+    private void delLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delLocalActionPerformed
+        control.borrarLocal(areaLocalName.getText());
+        this.updateUi();
+        limpiarAreasLocal();
+    }//GEN-LAST:event_delLocalActionPerformed
+
+    private void limpiarAreaComidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarAreaComidasActionPerformed
+        limpiarAreasComida();
+    }//GEN-LAST:event_limpiarAreaComidasActionPerformed
+
+    private void limpiarAreaLocalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarAreaLocalesActionPerformed
+        limpiarAreasLocal();
+    }//GEN-LAST:event_limpiarAreaLocalesActionPerformed
+
+    private void addCarroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCarroActionPerformed
+        Venta carro = control.agregarAlCarro(selectorComidaVenta.getSelectedItem().toString().split(" / ")[0]);
+        Total.setText(carro.totalVenta() + "");
+        updateLista();
+    }//GEN-LAST:event_addCarroActionPerformed
+
+    private void delCarroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delCarroActionPerformed
+        Venta carro = control.sacarDelCarro(listaCarroVentas.getSelectedIndex());
+        updateLista();
+        Total.setText(carro.totalVenta() + "");
+    }//GEN-LAST:event_delCarroActionPerformed
+
+    private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
+        control.Vender(selectorLocalVenta.getSelectedItem().toString());
+        Total.setText("Total");
+        updateLista();
+    }//GEN-LAST:event_btnVenderActionPerformed
+
+    private void limpiarCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarCajaActionPerformed
+        control.limpiarCaja();
+        updateLista();
+        Total.setText("Total");
+    }//GEN-LAST:event_limpiarCajaActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String local = selectorLocalHistorial.getSelectedItem().toString();
+        updateListaHistorial(local);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        String local = selectorLocalHistorial.getSelectedItem().toString();
+        control.borrarRegistro(listaVentas.getSelectedValue());
+        updateListaHistorial(local);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        String local = selectorLocalHistorial.getSelectedItem().toString();
+        control.destruirEvidencias();
+        updateListaHistorial(local);
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -215,18 +707,52 @@ public class Gui extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Total;
+    private javax.swing.JButton addCarro;
+    private javax.swing.JButton addComida;
+    private javax.swing.JButton addLocal;
     private javax.swing.JTextField areaComidaName;
     private javax.swing.JTextField areaComidaPrecio;
+    private javax.swing.JTextField areaLocalCod;
+    private javax.swing.JTextField areaLocalDir;
+    private javax.swing.JTextField areaLocalName;
+    private javax.swing.JTextField areaLocalTel;
+    private javax.swing.JButton btnBusquedaComida;
+    private javax.swing.JButton btnBusquedaLocal;
+    private javax.swing.JButton btnVender;
+    private javax.swing.JButton delCarro;
+    private javax.swing.JButton delComida;
+    private javax.swing.JButton delLocal;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton limpiarAreaComidas;
+    private javax.swing.JButton limpiarAreaLocales;
+    private javax.swing.JButton limpiarCaja;
+    private javax.swing.JList<String> listaCarroVentas;
+    private javax.swing.JList<String> listaVentas;
     private javax.swing.JComboBox<String> selectorComida;
+    private javax.swing.JComboBox<String> selectorComidaVenta;
+    private javax.swing.JComboBox<String> selectorLocalEdit;
+    private javax.swing.JComboBox<String> selectorLocalHistorial;
+    private javax.swing.JComboBox<String> selectorLocalVenta;
     // End of variables declaration//GEN-END:variables
 }

@@ -15,6 +15,13 @@ public class Comidas {
 
     public Comidas() {
     }
+    
+    public Comidas buscarComida(String nombre){
+        if(nombre.equals(this.nombre)){
+            return this;
+        }
+        return null;
+    }
 
     public Comidas(String nombre, double precio) {
         this.nombre = nombre;

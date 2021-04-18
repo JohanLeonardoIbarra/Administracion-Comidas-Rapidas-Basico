@@ -1,2 +1,4 @@
-Hamburquesa:4000.0
+Hamburguesa:4000.0
+Perro Caliente:4000.0
 Empanada:800.0
+Pan:2000.0
