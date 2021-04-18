@@ -38,7 +38,11 @@ public class Persistencia {
         this.comidas = comidas;
     }
     
-
+    /** 
+    *   Para la persistencia utilice archivos planos por que 
+    *   me parecio mas sencillo de poner a funcionar que con
+    *   una base de datos 
+    */
     public List<Local> leerLocales(){
         try(BufferedReader br = new BufferedReader(new FileReader("Save\\locales.txt"))){
             List <Local> l = new LinkedList<>();

@@ -131,7 +131,7 @@
             <Component class="javax.swing.JComboBox" name="selectorLocalVenta">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(comboBoxLocal(control.getLocales()))" type="code"/>
+                  <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(control.comboBoxLocal())" type="code"/>
                 </Property>
               </Properties>
               <AuxValues>
@@ -453,7 +453,7 @@
                 <Component class="javax.swing.JComboBox" name="selectorLocalEdit">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(comboBoxLocal(control.getLocales()))" type="code"/>
+                      <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(control.comboBoxLocal())" type="code"/>
                     </Property>
                   </Properties>
                   <AuxValues>
@@ -633,7 +633,7 @@
                 <Component class="javax.swing.JComboBox" name="selectorComida">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(comboBoxComida(control.getComidas()))" type="code"/>
+                      <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(control.comboBoxComida())" type="code"/>
                     </Property>
                   </Properties>
                   <Events>

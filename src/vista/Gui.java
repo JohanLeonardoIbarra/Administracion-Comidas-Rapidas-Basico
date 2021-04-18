@@ -6,11 +6,9 @@
 package vista;
 
 import Control.Controller;
-import Control.Persistencia;
 import Modelo.Comidas;
 import Modelo.Local;
 import Modelo.Venta;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -25,15 +23,22 @@ public class Gui extends javax.swing.JFrame {
      */
     private Controller control;
 
+    //constructor vacio
     public Gui() {
         initComponents();
     }
 
+    /**
+     * Constructor que recibe un controlador
+     */
     public Gui(Controller control) {
         this.control = control;
         initComponents();
     }
 
+    /**
+     * Limpia los cuadros de texto de la configuracion de locales
+     */
     private void limpiarAreasLocal() {
         areaLocalCod.setText("");
         areaLocalName.setText("");
@@ -41,60 +46,60 @@ public class Gui extends javax.swing.JFrame {
         areaLocalTel.setText("");
     }
 
+    /**
+     * Limpua los cuadros de texto de la configuracion de comidas
+     */
     private void limpiarAreasComida() {
         areaComidaName.setText("");
         areaComidaPrecio.setText("");
     }
 
-    /*
-        Actualiza los valores en los comboBox de seleccion de comida y locales
+    /**
+     * Actualiza los valores en los comboBox de seleccion de comida y locales
      */
     private void updateUi() {
-        selectorComidaVenta.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxComida(control.getComidas())));
-        selectorLocalVenta.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxLocal(control.getLocales())));
-        selectorLocalEdit.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxLocal(control.getLocales())));
-        selectorComida.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxComida(control.getComidas())));
+        selectorComidaVenta.setModel(new javax.swing.DefaultComboBoxModel<>(control.comboBoxComida()));
+        selectorLocalVenta.setModel(new javax.swing.DefaultComboBoxModel<>(control.comboBoxLocal()));
+        selectorLocalEdit.setModel(new javax.swing.DefaultComboBoxModel<>(control.comboBoxLocal()));
+        selectorComida.setModel(new javax.swing.DefaultComboBoxModel<>(control.comboBoxComida()));
     }
 
+    /**
+     * Actualiza los valores del carrito de compras
+     */
     private void updateLista() {
         listaCarroVentas.setModel(new javax.swing.AbstractListModel<String>() {
+            @Override
             public int getSize() {
                 return control.carroLista().length;
             }
 
+            @Override
             public String getElementAt(int i) {
                 return control.carroLista()[i];
             }
         });
     }
 
+    /**
+     * Recibe el nombre de un local Actualiza los valores de la lista del local
+     * indicado
+     *
+     * @param local
+     */
     private void updateListaHistorial(String local) {
         listaVentas.setModel(new javax.swing.AbstractListModel<String>() {
+            @Override
             public int getSize() {
                 return control.ventasLista(local).length;
             }
 
+            @Override
             public String getElementAt(int i) {
                 return control.ventasLista(local)[i];
             }
         });
 
-    }
-
-    public String[] comboBoxComida(List<Comidas> comidas) {
-        String a = "";
-        for (Comidas s : comidas) {
-            a += s.getNombre() + ":";
-        }
-        return a.substring(0, a.length()).split(":");
-    }
-
-    public String[] comboBoxLocal(List<Local> locales) {
-        String a = "";
-        for (Local s : locales) {
-            a += s.getNombre() + ":";
-        }
-        return a.substring(0, a.length()).split(":");
     }
 
     /**
@@ -159,7 +164,7 @@ public class Gui extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        selectorLocalVenta.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxLocal(control.getLocales())));
+        selectorLocalVenta.setModel(new javax.swing.DefaultComboBoxModel<>(control.comboBoxLocal()));
 
         jLabel9.setText("Local");
 
@@ -333,7 +338,7 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel1.setText("Registrar Local");
 
-        selectorLocalEdit.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxLocal(control.getLocales())));
+        selectorLocalEdit.setModel(new javax.swing.DefaultComboBoxModel<>(control.comboBoxLocal()));
 
         btnBusquedaLocal.setText("Q");
         btnBusquedaLocal.addActionListener(new java.awt.event.ActionListener() {
@@ -449,7 +454,7 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel4.setText("Precio");
 
-        selectorComida.setModel(new javax.swing.DefaultComboBoxModel<>(comboBoxComida(control.getComidas())));
+        selectorComida.setModel(new javax.swing.DefaultComboBoxModel<>(control.comboBoxComida()));
         selectorComida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectorComidaActionPerformed(evt);
@@ -584,27 +589,37 @@ public class Gui extends javax.swing.JFrame {
     private void selectorComidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectorComidaActionPerformed
 
     }//GEN-LAST:event_selectorComidaActionPerformed
-
+    /**
+    *   Busca una comida en especifico 
+     */
     private void btnBusquedaComidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBusquedaComidaActionPerformed
         Comidas c = control.buscarComidaYPrecio(selectorComida.getSelectedItem().toString());
         areaComidaName.setText(c.getNombre());
         areaComidaPrecio.setText(c.getPrecio() + "");
     }//GEN-LAST:event_btnBusquedaComidaActionPerformed
-
+    /**
+     *  Añade una comida al menu
+     */
     private void addComidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addComidaActionPerformed
         control.AgregarComida(areaComidaName.getText().toString(), areaComidaPrecio.getText().toString());
         this.updateUi();
         limpiarAreasComida();
     }//GEN-LAST:event_addComidaActionPerformed
-
+    /**
+     *  Saca una comida del menu
+     */
     private void delComidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delComidaActionPerformed
         int input = JOptionPane.showConfirmDialog(null, "Estas seguro de borrar todo?");
-        if(input == 1 || input == 2) return;
+        if (input == 1 || input == 2) {
+            return;
+        }
         control.borrarComida(areaComidaName.getText());
         this.updateUi();
         limpiarAreasComida();
     }//GEN-LAST:event_delComidaActionPerformed
-
+    /**
+     *  Busca un local en especifico
+     */
     private void btnBusquedaLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBusquedaLocalActionPerformed
         Local loc = control.buscarLocal(selectorLocalEdit.getSelectedItem().toString());
         areaLocalCod.setText(loc.getCod() + "");
@@ -612,69 +627,97 @@ public class Gui extends javax.swing.JFrame {
         areaLocalDir.setText(loc.getDireccion());
         areaLocalTel.setText(loc.getTelefono());
     }//GEN-LAST:event_btnBusquedaLocalActionPerformed
-
+    /**
+     *  Agrega un local a la lista
+     */
     private void addLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLocalActionPerformed
         control.agregarLocal(areaLocalCod.getText(), areaLocalName.getText(), areaLocalDir.getText(), areaLocalTel.getText());
         this.updateUi();
         limpiarAreasLocal();
     }//GEN-LAST:event_addLocalActionPerformed
-
+    /**
+     *  saca un local de la lista
+     */
     private void delLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delLocalActionPerformed
         int input = JOptionPane.showConfirmDialog(null, "Estas seguro de borrar todo?");
-        if(input == 1 || input == 2) return;
+        if (input == 1 || input == 2) {
+            return;
+        }
         control.borrarLocal(areaLocalName.getText());
         this.updateUi();
         limpiarAreasLocal();
     }//GEN-LAST:event_delLocalActionPerformed
-
+    /**
+     *  limpia las areas de texto de comida
+     */
     private void limpiarAreaComidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarAreaComidasActionPerformed
         limpiarAreasComida();
     }//GEN-LAST:event_limpiarAreaComidasActionPerformed
-
+    /**
+     *  limpia las areas de texto de locales
+     */
     private void limpiarAreaLocalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarAreaLocalesActionPerformed
         limpiarAreasLocal();
     }//GEN-LAST:event_limpiarAreaLocalesActionPerformed
-
+    /**
+     *  agrega una comida al carrito de compra
+     */
     private void addCarroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCarroActionPerformed
         Venta carro = control.agregarAlCarro(selectorComidaVenta.getSelectedItem().toString().split(" / ")[0]);
         Total.setText(carro.totalVenta() + "");
         updateLista();
     }//GEN-LAST:event_addCarroActionPerformed
-
+    /**
+     *  saca una comida del carrito de compra
+     */
     private void delCarroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delCarroActionPerformed
         Venta carro = control.sacarDelCarro(listaCarroVentas.getSelectedIndex());
         updateLista();
         Total.setText(carro.totalVenta() + "");
     }//GEN-LAST:event_delCarroActionPerformed
-
+    /**
+     *  Vende todos los objetos del carrito de compra
+     */
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
         control.Vender(selectorLocalVenta.getSelectedItem().toString());
         Total.setText("Total");
         updateLista();
     }//GEN-LAST:event_btnVenderActionPerformed
-
+    /**
+     *  limpia el carrito de compra
+     */
     private void limpiarCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarCajaActionPerformed
         control.limpiarCaja();
         updateLista();
         Total.setText("Total");
     }//GEN-LAST:event_limpiarCajaActionPerformed
-
+    /**
+     *  Actualiza la lista del historial con el local seleccionado
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String local = selectorLocalHistorial.getSelectedItem().toString();
         updateListaHistorial(local);
     }//GEN-LAST:event_jButton2ActionPerformed
-
+    /**
+     *  Borra el registro seleccionado
+     */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int input = JOptionPane.showConfirmDialog(null, "Estas seguro de borrar este Registro?");
-        if(input == 1 || input == 2) return;
+        if (input == 1 || input == 2) {
+            return;
+        }
         String local = selectorLocalHistorial.getSelectedItem().toString();
         control.borrarRegistro(listaVentas.getSelectedValue());
         updateListaHistorial(local);
     }//GEN-LAST:event_jButton3ActionPerformed
-
+    /**
+     *  Borra todos los registros de ventas
+     */
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         int input = JOptionPane.showConfirmDialog(null, "Estas seguro de borrar todo?");
-        if(input == 1 || input == 2) return;
+        if (input == 1 || input == 2) {
+            return;
+        }
         String local = selectorLocalHistorial.getSelectedItem().toString();
         control.destruirEvidencias();
         updateListaHistorial(local);

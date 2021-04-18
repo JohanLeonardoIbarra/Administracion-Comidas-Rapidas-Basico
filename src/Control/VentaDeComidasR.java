@@ -8,7 +8,6 @@ package Control;
 import Modelo.Comidas;
 import Modelo.Local;
 import Modelo.Venta;
-import java.util.LinkedList;
 import java.util.List;
 import vista.Gui;
 
