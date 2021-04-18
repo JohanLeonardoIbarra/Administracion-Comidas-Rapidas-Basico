@@ -12,6 +12,7 @@ import Modelo.Local;
 import Modelo.Venta;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -597,6 +598,8 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_addComidaActionPerformed
 
     private void delComidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delComidaActionPerformed
+        int input = JOptionPane.showConfirmDialog(null, "Estas seguro de borrar todo?");
+        if(input == 1 || input == 2) return;
         control.borrarComida(areaComidaName.getText());
         this.updateUi();
         limpiarAreasComida();
@@ -617,6 +620,8 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_addLocalActionPerformed
 
     private void delLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delLocalActionPerformed
+        int input = JOptionPane.showConfirmDialog(null, "Estas seguro de borrar todo?");
+        if(input == 1 || input == 2) return;
         control.borrarLocal(areaLocalName.getText());
         this.updateUi();
         limpiarAreasLocal();
@@ -660,12 +665,16 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        int input = JOptionPane.showConfirmDialog(null, "Estas seguro de borrar este Registro?");
+        if(input == 1 || input == 2) return;
         String local = selectorLocalHistorial.getSelectedItem().toString();
         control.borrarRegistro(listaVentas.getSelectedValue());
         updateListaHistorial(local);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        int input = JOptionPane.showConfirmDialog(null, "Estas seguro de borrar todo?");
+        if(input == 1 || input == 2) return;
         String local = selectorLocalHistorial.getSelectedItem().toString();
         control.destruirEvidencias();
         updateListaHistorial(local);
